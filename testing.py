@@ -1,18 +1,17 @@
+class Movie():
+    def __init__ (self, name, release, notation):
+        self.name =name
+        self.release = release
+        self.notation = notation
 
-import logging
-logging.basicConfig(level=logging.DEBUG,
-                    filename="app.log",
-                    filemode="a",
-                    format="%(asctime)s - %(levelname)s - %(message)s")
-                    
-def fonction_example(nom, age):
-    """_summary_
+avatar = Movie("Avatar", "2001", "5")
+saw = Movie("Saw", "2000", "3,5")
 
-    Args:
-        nom (_type_): _description_
-        age (_type_): _description_
+# def afficher_info(self, name, release, notation ):
+#    print(f"Le film {avatar.name} est sorti en salle en {avatar.release} et a obtenu la note de {avatar.notation} sur 5 ")
 
-    Returns:
-        _type_: _description_
-    """
- 
+
+def afficher_info(self):
+    print(f"Le film {self.name} est sorti en salle en {self.release} et a obtenu la note de {self.notation} sur 5 ")
+
+afficher_info(saw) 
