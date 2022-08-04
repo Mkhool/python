@@ -1,8 +1,6 @@
 from random import random
 from collections import Counter
 mylist = []
-listepile = []
-listeface = []
 
 for i in range(100):
     if random() < 0.50:
@@ -12,14 +10,14 @@ for i in range(100):
 
 
 
+for i in Counter(mylist).items():
+    print(i)
 
-if "cote_pile" in mylist:
+
+"""if "cote_pile" in mylist:
     listepile.append(mylist)
 else:
-    listeface.append(mylist)
-
-print(Counter(mylist))
-
+    listeface.append(mylist)"""
 
 """for x in mylist:
     if "cote_pile" in x:
