@@ -30,7 +30,7 @@ class Ricochet():
     def lancer():
         global pierre
         i = randint(0, 5)
-
+        print(50 * "-")
         if pierre <= 0:
             print("Vous n'avez plus de pierre à lancer, ramassez en une !")
         else:
@@ -43,6 +43,7 @@ class Ricochet():
         if pierre <=0:
             print("Vous n'avez plus de pierre" "\n", 50* "-")
         else:
+
             print(" Il vous reste", pierre, "pierre" "\n", 50* "-")
 
 player = input("Voulez jouer au jeu du ricochet ? yes or quit\n")
