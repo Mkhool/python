@@ -4,6 +4,8 @@ from ursina import time
 
 window.title = " The Maze"
 window.borderless = False
+
+
 base_temps = time.time()
 
 
@@ -69,6 +71,19 @@ Audio(sound_file_name='Retro_Platforming.mp3', autoplay=True, loop=True, auto_de
 
 hit_jump = Audio('hit_jump.wav', pitch=1, autoplay=True)
 
+pause_handler = Entity(ignore_paused=True)
+pause_text = Text('PAUSED', origin=(0,0), scale=2, enabled=False) # Make a Text saying "PAUSED" just to make it clear when it's paused.
+
+def stop_music(Audio):
+    if b_pause.on_click:
+        return Audio.pause()
+
+def pause_handler_input(key):
+    if key == 'escape':
+        application.paused = not application.paused # Pause/unpause the game.
+        pause_text.enabled = application.paused     # Also toggle "PAUSED" graphic.
+
+pause_handler.input = pause_handler_input   # Assign the input function to the pause handler.
 
 def make_level(texture):
     # destroy every child of the level parent.
@@ -132,6 +147,9 @@ input_handler.bind('gamepad a', 'space')
 
 button_2 = Button(x=-0.75, scale=0.05, color=rgb(250, 128, 114), disabled=True)
 button_2.tooltip = Tooltip(f'<gold>The Maze\n<default>Find a way out.\n')
-# button_2.on_click = player.start_position
+
+b_pause = Button(x=-0.75, y=-0.10, scale=0.05, text='pause', color=color.azure, text_origin=(-.5, 0))
+b_pause.on_click = stop_music  # assign a function to the button.
+b_pause.tooltip = Tooltip('pause')
 
 app.run()

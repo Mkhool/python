@@ -1,76 +1,55 @@
 import time
-
 from ursina import *
 
-window.title = " The Clock test"
+window.title = " The Clock"
 window.borderless = False
-base_temps = time.time()
-reset_time = time.time()
-score_time = time.time() - base_temps
-is_paused = False
+window.size = (1200, 600)
 
 
-def toggle_pause():
-    global is_paused
-    if is_paused == True:
-        is_paused = False
-    else:
-        is_paused = True
+class TimerError(Exception):
+
+    """A custom exception used to report errors in use of Timer class"""
 
 
-def reset():
-    global reset_time, score_time
-    reset_time = time.time() - score_time
-    print(reset_time)
+class Timer:
+
+    def __init__(self):
+
+        self._start_time = None
 
 
-text = Text(text='')
-text2 = Text(text='')
-text3 = Text(text='')
+    def start(self):
 
-text.y = 1
+        """Start a new timer"""
 
-text = Text(f" {str(format(score_time, '.2f'))}",
-             position=(1, .4), origin=(0, 0), scale=2, background=True)
-format(score_time, '.2f')
+        if self._start_time is not None:
 
-while True:
-    def update():
-        global text, text2, text3, reset_time, score_time
-        score_time = time.time() - base_temps
-
-        # Digital clock
-       #text.y = 1
-
-       #text = Text(f" {str(format(score_time, '.2f'))}",
-       #            position=(0, .4), origin=(0, 0), scale=2, background=True)
-       #format(score_time, '.2f')
+            raise TimerError(f"Timer is running. Use .stop() to stop it")
 
 
-
-        text3.y = 1
-
-        text3 = Text(f" {str(format(score_time, '.2f'))}",
-                     position=(2, .4), origin=(0, 0), scale=2, background=True)
-        format(score_time, '.2f')
+        self._start_time = time.perf_counter()
 
 
-    app = Ursina()
-    wall = Entity(model='quad', scale=(15, 10))
+    def stop(self):
+
+        """Stop the timer, and report the elapsed time"""
+
+        if self._start_time is None:
+
+            raise TimerError(f"Timer is not running. Use .start() to start it")
 
 
-    clock = Entity(model='circle', color=color.black, scale=5)
+        elapsed_time = time.perf_counter() - self._start_time
 
-    b_pause = Button(x=-0, y=-0.07, scale=0.10, text='pause', color=color.azure, highlight_color=color.brown,
-                     text_origin=(-.5, 0))
-    b_pause.on_click = application.pause  # assign a function to the button.
+        self._start_time = None
 
-    b_resume = Button(x=0.25, y=-0.07, scale=0.10, text='resume', color=color.azure, highlight_color=color.brown,
-                      text_origin=(-0.25, 0))
-    b_resume.on_click = application.resume
+        print(f"Elapsed time: {elapsed_time:0.2f} seconds")
 
-    b_reset = Button(x=0.50, y=-0.07, scale=0.10, text='reset', color=color.black, highlight_color=color.brown,
-                     text_origin=(-0.25, 0))
-    b_reset.on_click = reset  # assign a function to the button.
 
-    app.run()
+t = Timer()
+t.start()
+input("touche y")
+if input == "y":
+    time.sleep(3) and t.stop()
+
+

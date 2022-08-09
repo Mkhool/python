@@ -1,10 +1,13 @@
 from ursina import *
 from ursina.prefabs.platformer_controller_2d import PlatformerController2d
-from ursina import time
+from ursina import time, Audio
 
 window.title = " The Maze"
 window.borderless = False
+# window.size = (1200, 600)
+
 base_temps = time.time()
+
 
 class Enemy(Entity):
 
@@ -35,11 +38,6 @@ def update():
             player.position = player.start_position
 
 
-def input(key):
-    if key == 'space':
-        _ = Audio('hit_jump.wav', pitch=1, autoplay=True)
-
-
 enemies = []
 
 enemy = Enemy(15, 35.5)
@@ -63,9 +61,39 @@ quad = load_model('quad', use_deepcopy=True)
 
 level_parent = Entity(model=Mesh(vertices=[], uvs=[]), texture='white_cube')
 
-Audio(sound_file_name='Retro_Platforming.mp3', autoplay=True, loop=True, auto_destroy=False)
+retro_song = Audio(sound_file_name='Retro_Platforming.mp3', autoplay=True, loop=True, auto_destroy=False,
+                   volume=100)
+retro_song_off = retro_song.volume = 0
+retro_song_on = retro_song.volume = 100
 
 hit_jump = Audio('hit_jump.wav', pitch=1, autoplay=True)
+
+pause_handler = Entity(ignore_paused=True)
+pause_text = Text('PAUSED', origin=(0, 0), scale=2,
+                  enabled=False)  # Make a Text saying "PAUSED" just to make it clear when it's paused.
+
+
+def input(key):
+    global retro_song
+    if key == 'space':
+        _ = Audio('hit_jump.wav', pitch=1, autoplay=True)
+
+
+def retro_song_switch():
+    if retro_song.volume == 100:
+        retro_song.volume = 0
+    elif retro_song.volume == 0:
+        retro_song.volume = 100
+
+
+def pause_handler_input(key):
+    if key == 'escape':
+        application.paused = not application.paused  # Pause/unpause the game.
+        pause_text.enabled = application.paused  # Also toggle "PAUSED" graphic.
+        retro_song_switch()
+
+
+pause_handler.input = pause_handler_input  # Assign the input function to the pause handler.
 
 
 def make_level(texture):
@@ -128,7 +156,6 @@ input_handler.bind('gamepad dpad right', 'd')
 input_handler.bind('gamepad dpad left', 'a')
 input_handler.bind('gamepad a', 'space')
 
-
 player.start_position = player.position
 
 button_2 = Button(x=-0.75, scale=0.05, color=rgb(250, 128, 114))
@@ -136,19 +163,26 @@ button_2.tooltip = Tooltip(f'<gold>The Maze\n<default>Find a way out.\n')
 button_2.on_click = player.start_position
 
 
-b_pause = Button(x=-0.75, y=-0.10, scale=0.05, text='pause', color=color.azure, text_origin=(-.5, 0))
-b_pause.on_click = application.pause  # assign a function to the button.
+def app_pause():
+    application.pause()
+    retro_song_switch()
+
+
+def app_resume():
+    application.resume()
+    retro_song_switch()
+
+
+b_pause = Button(x=-0.75, y=-0.15, scale=(0.131, 0.040), icon="assets/pause.png")
+b_pause.on_click = app_pause  # assign a function to the button.
 b_pause.tooltip = Tooltip('pause')
 
-
-b_resume = Button(x=-0.75, y=-0.20, scale=0.05, text='resume', color=color.azure, text_origin=(-0.25, 0))
-b_resume.on_click = application.resume  # assign a function to the button.
+b_resume = Button(x=-0.75, y=-0.20, scale=(0.195, 0.041), icon="assets/continue.png")
+b_resume.on_click = app_resume  # assign a function to the button.
 b_resume.tooltip = Tooltip('resume')
 
-b_quit = Button(x=-0.75, y=-0.30, scale=0.05, text='Quit', color=color.azure, text_origin=(-.5,0))
-b_quit.on_click = application.quit # assign a function to the button.
+b_quit = Button(x=-0.75, y=-0.25, scale=(0.131, 0.041), icon="assets/quit.png")
+b_quit.on_click = application.quit  # assign a function to the button.
 b_quit.tooltip = Tooltip('exit')
-
-
 
 app.run()

@@ -1,22 +1,10 @@
-import time
-
 from ursina import *
 
 window.title = " The Clock"
 window.borderless = False
 base_temps = time.time()
 reset_time = time.time()
-
-
-# s_paused = False
-
-
-# ef toggle_pause():
-#   global is_paused
-#   if is_paused == True:
-#       is_paused = False
-#   else:
-#       is_paused = True
+window.size = (1200, 600)
 
 
 def reset():
@@ -49,7 +37,7 @@ b_pause = Button(x=-0, y=-0.07, scale=0.10, text='pause', color=color.azure, hig
 b_pause.on_click = application.pause  # assign a function to the button.
 
 
-b_resume = Button(x=0.25, y=-0.07, scale=0.10, text='resume', color=color.azure, highlight_color= color.brown, text_origin=(-0.25, 0))
+b_resume = Button(x=0.25, y=-0.07, scale=(0.131, 0.040), icon="assets/quit.png")
 b_resume.on_click = application.resume
 
 
