@@ -48,8 +48,10 @@ class Timer:
 
 t = Timer()
 t.start()
-input("touche y")
-if input == "y":
-    time.sleep(3) and t.stop()
+x = input("touche y:")
+
+if x == "y":
+    time.sleep(3)
+    t.stop()
 
 

@@ -4,16 +4,48 @@ window.title = " The Clock"
 window.borderless = False
 
 
-def reset():
-    global reset_time, score_time
-    reset_time = time.time() - time.time()
-    print(reset_time)
+class TimerError(Exception):
+
+    """A custom exception used to report errors in use of Timer class"""
 
 
-# def resume():
-#    global reset_time, score_time
-#    resume_time = time.time() - base_temps - score_time
-#    print(resume_time)
+class Timer:
+
+    def __init__(self):
+
+        self._start_time = None
+
+
+    def start(self):
+
+        """Start a new timer"""
+
+      # if self._start_time is not None:
+
+      #     raise TimerError(f"Timer is running. Use .stop() to stop it")
+
+
+        self._start_time = time.perf_counter()
+
+
+    def stop(self):
+
+        """Stop the timer, and report the elapsed time"""
+
+        if self._start_time is None:
+
+            raise TimerError(f"Timer is not running. Use .start() to start it")
+
+
+        elapsed_time = time.perf_counter() - self._start_time
+
+        self._start_time = None
+
+        print(f"Elapsed time: {elapsed_time:0.2f} seconds")
+
+
+t = Timer()
+t.start()
 
 
 def update():
@@ -21,9 +53,9 @@ def update():
 
     # Digital clock
     text.y = 1
-    text = Text(f" {str(format(reset_time, '.2f'))}",  # modif score_time / reset
+    text = Text(f" {(format(time.perf_counter(), '.2f'))}",
                 position=(0, .4), origin=(0, 0), scale=2, background=True)
-    format(score_time, '.2f')
+
 
 
 # Main game
@@ -43,6 +75,6 @@ b_resume.on_click = application.resume
 
 b_reset = Button(x=0.50, y=-0.07, scale=0.10, text='reset', color=color.black, highlight_color=color.brown,
                  text_origin=(-0.25, 0))
-b_reset.on_click = reset  # assign a function to the button.
+b_reset.on_click = t.stop() # assign a function to the button.
 
 app.run()
